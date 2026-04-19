@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adam Svec — Seeking.com Application</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --accent: #e8c547;
+    --text: #f0ece4;
+    --muted: #888;
+    --border: #2a2a2a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; min-height: 100vh; }
+  .page { max-width: 860px; margin: 0 auto; padding: 80px 40px; }
+  .header { margin-bottom: 80px; border-bottom: 1px solid var(--border); padding-bottom: 48px; }
+  .header-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; font-weight: 500; }
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(42px, 6vw, 72px); line-height: 1.05; color: var(--text); margin-bottom: 16px; }
+  .header h1 em { font-style: italic; color: var(--accent); }
+  .header-meta { font-size: 13px; color: var(--muted); letter-spacing: 0.05em; }
+  .toc { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 28px 32px; margin-bottom: 72px; }
+  .toc-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .toc a { display: block; color: var(--text); text-decoration: none; font-size: 14px; padding: 4px 0; transition: color 0.2s; }
+  .toc a:hover { color: var(--accent); }
+  .toc-num { color: var(--accent); font-family: 'DM Serif Display', serif; margin-right: 8px; font-size: 16px; }
+  .section { margin-bottom: 80px; animation: fadeUp 0.6s ease both; }
+  .section-header { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 40px; }
+  .section-num { font-family: 'DM Serif Display', serif; font-size: 80px; line-height: 0.85; color: var(--border); flex-shrink: 0; user-select: none; }
+  .section-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 6px; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.15; color: var(--text); }
+  .content p { font-size: 16px; line-height: 1.8; color: #ccc; margin-bottom: 20px; }
+  .content p:last-child { margin-bottom: 0; }
+  .highlight-block { background: var(--surface); border-left: 3px solid var(--accent); padding: 20px 24px; margin: 28px 0; font-size: 15px; color: var(--text); line-height: 1.7; font-style: italic; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; }
+  .feature-card-num { font-size: 10px; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; font-weight: 500; }
+  .feature-card p { font-size: 14px; color: #aaa; margin: 0; line-height: 1.6; }
+  .link-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); padding: 10px 16px; font-size: 13px; color: var(--accent); text-decoration: none; margin-top: 20px; transition: all 0.2s; letter-spacing: 0.03em; }
+  .link-pill:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .link-pill::before { content: '↗'; font-size: 14px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 64px 0; }
+  .bonus-header { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .bonus-badge { background: var(--accent); color: var(--bg); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 14px; }
+  .bonus-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); }
+  .project-item { border: 1px solid var(--border); padding: 28px; margin-bottom: 20px; background: var(--surface); position: relative; }
+  .project-item::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); opacity: 0.4; }
+  .project-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 500; }
+  .project-desc { font-size: 15px; color: #bbb; line-height: 1.7; margin-bottom: 16px; }
+  .closing { background: var(--surface); border: 1px solid var(--border); padding: 36px; margin-top: 48px; }
+  .closing p { font-size: 16px; line-height: 1.8; color: #ccc; margin-bottom: 12px; }
+  .closing p:last-child { margin-bottom: 0; }
+  .footer { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 600px) { .page { padding: 40px 20px; } .feature-grid { grid-template-columns: 1fr; } .section-num { font-size: 56px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="header">
+    <div class="header-label">Application · Product Associate</div>
+    <h1>Adam Svec</h1>
+    <div class="header-meta">Response to application questions · 2026</div>
+  </header>
+  <nav class="toc">
+    <div class="toc-label">Contents</div>
+    <a href="#q1"><span class="toc-num">01</span>What's broken on Vinted</a>
+    <a href="#q2"><span class="toc-num">02</span>What I've built</a>
+    <a href="#bonus"><span class="toc-num">★</span>Bonus projects</a>
+  </nav>
+  <section class="section" id="q1">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div>
+        <div class="section-tag">Question One · Product Problem</div>
+        <h2 class="section-title">Vinted has a fit problem.</h2>
+      </div>
+    </div>
+    <div class="content">
+      <p>People post photos of clothes folded on a bed with no sense of how the item actually looks on a person. I have bought things that looked fine in the listing and just did not fit me well when they arrived. This is also an issue when it comes to selling more expensive clothes. You do not care if a $5 t-shirt fits or not, but you do care whether a $500 jacket will fit you.</p>
+      <p>I would fix this with a fit layer built into the buying experience.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-card-num">Fix 01 — Try-On</div>
+          <p>Pull in Google's virtual try-on so buyers can see the item on themselves before purchasing. Not groundbreaking, but completely underused on secondhand platforms.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-num">Fix 02 — Fit Profile</div>
+          <p>Build a fit profile from purchase history. Vinted should ask what products you own that fit well and use that to predict how new listings will fit.</p>
+        </div>
+      </div>
+      <div class="highlight-block">Rather than filtering listings, Vinted should simply show a brief note: "These pants have a similar fit to your Tommy Hilfiger pants, however these might be slightly looser at the waist — they are a 33 and your Tommy Hilfiger are a 32."</div>
+      <p>Of course it might not work for every item and it could be a costly feature, but worth testing whether people find it useful. If they do, we could figure out the costs or even introduce it as a premium subscription feature.</p>
+      <a href="https://www.figma.com/design/MBVAOXHGKMZYcMP8IhIIs5/Vinted-update?node-id=3-2&t=q84J2Pop6LrOB9Xr-1" class="link-pill" target="_blank">View Figma Prototype</a>
+    </div>
+  </section>
+  <hr class="divider">
+  <section class="section" id="q2">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div>
+        <div class="section-tag">Question Two · What I've Built</div>
+        <h2 class="section-title">A furniture business. Bootstrapping to $80K after high school.</h2>
+      </div>
+    </div>
+    <div class="content">
+      <p>During COVID I started a furniture business. I designed small aluminium home products including wall hooks, shelves, and bike hangers, manufactured them, and sold them on Etsy. I had around 8 designs live, three of which became bestsellers in their category. I can now say I had the most sold wall hook, small bookshelf, and wall bike hanger on Etsy for a couple of months. I bootstrapped it to $80K in revenue.</p>
+      <div class="highlight-block">But I did not have enough focus. I wanted to do everything and I was not solving the core issues that came my way.</div>
+      <p>When COVID caused factory shutdowns in China I was unable to manufacture products I had already sold. I had to refund a lot of people and got negative reviews as a result.</p>
+      <p>I originally manufactured in my home country Slovakia but moved production to China to cut costs. In hindsight that was the wrong call. I should have kept it in Slovakia, built on the premium angle, and leaned into the EU-made story. I learned more from closing that business than from anything that went well.</p>
+    </div>
+  </section>
+  <hr class="divider">
+  <section class="section" id="bonus">
+    <div class="bonus-header">
+      <div class="bonus-badge">Bonus</div>
+      <div class="bonus-title">More things I've made.</div>
+    </div>
+    <div class="project-item">
+      <div class="project-label">Project 01 — Circular Retail MVP</div>
+      <p class="project-desc">I interviewed parents in Boston about buying baby gear and built an MVP for a circular retail experience where buying new or used feels identical and you can return gear for credit when you are done with it.</p>
+      <a href="https://harp-wild-78838803.figma.site/" class="link-pill" target="_blank">View Live MVP</a>
+    </div>
+    <div class="project-item">
+      <div class="project-label">Project 02 — Video Tagging App</div>
+      <p class="project-desc">For our university social media team I created an app that automatically sorted and tagged videos so we could have a large library of raw content, allowing us to quickly find the right footage for whatever video we were working on. I built it on Replit but then saw it was charging me $100 so I shut it down.</p>
+      <a href="https://youtu.be/RpcY0tLgMdQ" class="link-pill" target="_blank">Watch Demo Video</a>
+    </div>
+    <div class="closing">
+      <p>I am not the best coder or the most technical person in the room. What I am is someone who has done product, analytics, marketing, and sales and understands how they connect.</p>
+      <p>As I realized, overspecialization leaves most teams with experts who cannot talk to each other. I try to fill those gaps.</p>
+    </div>
+  </section>
+  <footer class="footer">
+    <span>Adam Svec · 2026</span>
+    <span>Product Associate Application</span>
+  </footer>
+</div>
+</body>
+</html>
